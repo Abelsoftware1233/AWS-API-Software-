@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABEL123 :: CLOUD SENTINEL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">⬡</span>
+    <div class="brand-text">
+      <h1>ABEL123 <span>::</span> CLOUD SENTINEL</h1>
+      <p>AWS misconfig &amp; API endpoint security scanner</p>
+    </div>
+  </div>
+  <div class="status-pill" id="backendStatus">
+    <span class="dot"></span> BACKEND: CHECKING...
+  </div>
+</header>
+
+<main class="layout">
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="aws">AWS SCANNER</button>
+    <button class="tab" data-tab="endpoint">API ENDPOINT SCANNER</button>
+  </nav>
+
+  <!-- ============== AWS TAB ============== -->
+  <section class="panel" id="tab-aws">
+    <div class="grid-2">
+
+      <div class="card">
+        <h2>AWS Credentials</h2>
+        <p class="warn-box">
+          ⚠ Gebruik bij voorkeur een <strong>read-only IAM user</strong> (bv. policy <code>ReadOnlyAccess</code>).
+          Credentials worden alleen in-memory gebruikt voor deze scan en nergens opgeslagen of gelogd.
+        </p>
+
+        <label>Access Key ID</label>
+        <input type="text" id="accessKey" placeholder="AKIA..." autocomplete="off">
+
+        <label>Secret Access Key</label>
+        <input type="password" id="secretKey" placeholder="••••••••••••••••••••" autocomplete="off">
+
+        <label>Session Token <span class="optional">(optioneel, bij tijdelijke credentials)</span></label>
+        <input type="password" id="sessionToken" placeholder="optioneel" autocomplete="off">
+
+        <label>Regio</label>
+        <select id="region">
+          <option value="us-east-1">us-east-1 (N. Virginia)</option>
+          <option value="us-east-2">us-east-2 (Ohio)</option>
+          <option value="us-west-2">us-west-2 (Oregon)</option>
+          <option value="eu-west-1">eu-west-1 (Ierland)</option>
+          <option value="eu-central-1">eu-central-1 (Frankfurt)</option>
+          <option value="eu-west-2">eu-west-2 (Londen)</option>
+          <option value="eu-north-1">eu-north-1 (Stockholm)</option>
+          <option value="ap-southeast-1">ap-southeast-1 (Singapore)</option>
+        </select>
+
+        <h3>Checks</h3>
+        <div class="checklist" id="awsChecklist">
+          <label class="check-item"><input type="checkbox" value="S3 Buckets" checked> S3 Buckets (public access, encryptie, versioning)</label>
+          <label class="check-item"><input type="checkbox" value="IAM" checked> IAM (MFA, oude keys, admin policies)</label>
+          <label class="check-item"><input type="checkbox" value="Security Groups" checked> Security Groups (open poorten)</label>
+          <label class="check-item"><input type="checkbox" value="EBS Volumes" checked> EBS Volumes (encryptie)</label>
+          <label class="check-item"><input type="checkbox" value="RDS" checked> RDS (publieke toegang, encryptie)</label>
+          <label class="check-item"><input type="checkbox" value="CloudTrail" checked> CloudTrail (logging)</label>
+        </div>
+
+        <button class="scan-btn" id="scanAwsBtn">
+          <span class="btn-icon">▶</span> START AWS SCAN
+        </button>
+      </div>
+
+      <div class="card results-card">
+        <h2>Resultaten</h2>
+        <div id="awsSummary" class="summary hidden">
+          <div class="identity" id="awsIdentity"></div>
+          <div class="counts" id="awsCounts"></div>
+        </div>
+        <div id="awsFindings" class="findings">
+          <div class="empty-state">Nog geen scan uitgevoerd. Vul credentials in en start de scan.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============== ENDPOINT TAB ============== -->
+  <section class="panel hidden" id="tab-endpoint">
+    <div class="grid-2">
+
+      <div class="card">
+        <h2>API / Endpoint</h2>
+        <p class="warn-box">
+          ⚠ Scan alleen endpoints waarvoor je toestemming hebt. Deze scanner gebruikt uitsluitend
+          non-intrusieve HTTP checks (headers, TLS, CORS) — geen fuzzing of exploitatie.
+        </p>
+
+        <label>URL</label>
+        <input type="text" id="endpointUrl" placeholder="https://api.voorbeeld.nl/v1/status" autocomplete="off">
+
+        <button class="scan-btn" id="scanEndpointBtn">
+          <span class="btn-icon">▶</span> START ENDPOINT SCAN
+        </button>
+      </div>
+
+      <div class="card results-card">
+        <h2>Resultaten</h2>
+        <div id="endpointSummary" class="summary hidden">
+          <div class="identity" id="endpointIdentity"></div>
+          <div class="counts" id="endpointCounts"></div>
+        </div>
+        <div id="endpointFindings" class="findings">
+          <div class="empty-state">Nog geen scan uitgevoerd. Vul een URL in en start de scan.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  ABELSOFTWARE123 :: CLOUD SENTINEL — read-only scanning, geen destructieve acties.
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
