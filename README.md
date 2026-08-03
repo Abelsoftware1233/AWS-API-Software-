@@ -9,7 +9,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Backend draait op `http://localhost:5000`. Open `index.html` in de browser
+Backend draait op `http://localhost:5012`. Open `index.html` in de browser
 (of serveer via een simpele static server) — hij praat met de backend op
 `API_BASE` in `script.js`.
 
